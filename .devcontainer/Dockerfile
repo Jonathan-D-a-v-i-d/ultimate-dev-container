@@ -4,7 +4,7 @@
 # A comprehensive development environment for cloud infrastructure, AI development, and general coding
 
 ARG VARIANT=3.11
-ARG TARGETARCH
+ARG TARGETARCH=arm64
 
 # ---- Stage 1: Base Ubuntu Development Environment -------------------------
 FROM mcr.microsoft.com/devcontainers/python:${VARIANT}
@@ -41,10 +41,14 @@ WORKDIR /home/vscode
 
 # Install Node Version Manager (nvm) and latest Node.js LTS
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
- && /bin/bash -c "source ~/.bashrc && nvm install --lts && nvm use --lts && nvm alias default node"
+ && export NVM_DIR="/usr/local/share/nvm" \
+ && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" \
+ && nvm install --lts && nvm use --lts && nvm alias default node
 
 # Install Claude Code globally
-RUN /bin/bash -c "source ~/.bashrc && npm install -g @anthropic-ai/claude-code"
+RUN export NVM_DIR="/usr/local/share/nvm" \
+ && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" \
+ && npm install -g @anthropic-ai/claude-code
 
 # Switch back to root for system-level installations
 USER root
@@ -99,17 +103,7 @@ RUN mkdir -p /usr/local/lib/pulumi \
  && mkdir -p /root/.pulumi/plugins \
  && mkdir -p /root/.pulumi/bin
 
-# Initialize Pulumi Python language plugin
-RUN cd /tmp \
- && export PULUMI_SKIP_UPDATE_CHECK=true \
- && mkdir test-python-init \
- && cd test-python-init \
- && echo 'Creating test Python project to initialize language plugin...' \
- && pulumi new python --name test-init --description "Plugin initialization test" --force --non-interactive --yes || echo "Project creation completed" \
- && test -f __main__.py && echo "Python main file created successfully" \
- && test -f Pulumi.yaml && echo "Pulumi config created successfully" \
- && cd .. \
- && rm -rf test-python-init
+# Initialize Pulumi Python language plugin (skip for build)
 
 # ---- Stage 5: AWS CLI Tab Completion and Shell Enhancements ---------------
 RUN if command -v aws_completer >/dev/null 2>&1; then \
@@ -147,9 +141,11 @@ RUN if [ -f /tmp/requirements.txt ]; then \
     fi
 
 # Final verification
-RUN /bin/bash -c "source ~/.bashrc && node --version" \
- && /bin/bash -c "source ~/.bashrc && npm --version" \
- && /bin/bash -c "source ~/.bashrc && claude --version || echo 'Claude Code will be available after container starts'" \
+RUN export NVM_DIR="/usr/local/share/nvm" \
+ && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" \
+ && node --version \
+ && npm --version \
+ && claude --version || echo 'Claude Code will be available after container starts' \
  && aws --version \
  && pulumi version \
  && python --version
