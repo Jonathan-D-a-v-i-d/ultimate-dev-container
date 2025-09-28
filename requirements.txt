@@ -1,0 +1,39 @@
+# Ultimate Dev Container - Python Dependencies
+# This file is automatically installed during container creation
+
+# Core utilities
+requests>=2.31.0
+pyyaml>=6.0
+click>=8.1.0
+rich>=13.0.0
+
+# AWS and Cloud
+boto3>=1.34.0
+botocore>=1.34.0
+
+# Pulumi Infrastructure as Code
+pulumi>=3.100.0
+pulumi-aws>=6.0.0
+
+# Development tools
+black>=23.0.0
+flake8>=6.0.0
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Data manipulation (commonly used)
+pandas>=2.1.0
+numpy>=1.24.0
+
+# Web development
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# Jupyter/IPython for interactive development
+ipython>=8.17.0
+jupyter>=1.0.0
+
+# Additional useful packages
+python-dotenv>=1.0.0
+jsonschema>=4.19.0
+toml>=0.10.2

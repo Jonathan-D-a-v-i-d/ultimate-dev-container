@@ -1,0 +1,104 @@
+{
+  "name": "Ultimate Dev Container - Ubuntu + Claude Code + AWS + Pulumi",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "VARIANT": "3.11"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": false,
+      "installOhMyZsh": true,
+      "installOhMyZshConfig": true,
+      "upgradePackages": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "installDirectlyFromGitHubRelease": true,
+      "version": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Python Development
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.flake8",
+        "ms-python.black-formatter",
+
+        // Infrastructure as Code
+        "hashicorp.terraform",
+        "pulumi.pulumi-lsp",
+
+        // Cloud Development
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-azuretools.vscode-docker",
+
+        // General Development
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-typescript-next",
+        "ms-vscode.vscode-eslint",
+
+        // Git and GitHub
+        "github.vscode-github-actions",
+        "github.copilot",
+        "github.copilot-chat",
+
+        // Productivity
+        "ms-vscode.atom-keybindings",
+        "pkief.material-icon-theme",
+        "dracula-theme.theme-dracula",
+
+        // Documentation
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": false,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": true
+        },
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "workbench.colorTheme": "Dracula",
+        "workbench.iconTheme": "material-icon-theme"
+      }
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postStartCommand": "bash .devcontainer/post-start.sh",
+  "remoteUser": "vscode",
+  "updateContentCommand": "",
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+  ],
+  "runArgs": [
+    "--init"
+  ],
+  "containerEnv": {
+    "TERM": "xterm-256color",
+    "PULUMI_SKIP_UPDATE_CHECK": "true"
+  },
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/home/vscode/.local/bin:/home/vscode/.nvm/versions/node/$(nvm current)/bin"
+  }
+}
