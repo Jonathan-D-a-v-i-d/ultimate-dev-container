@@ -52,6 +52,9 @@
         "github.copilot",
         "github.copilot-chat",
 
+        // AI Development Assistants
+        "rooveterinaryinc.roo-cline",
+
         // Productivity
         "ms-vscode.atom-keybindings",
         "pkief.material-icon-theme",
